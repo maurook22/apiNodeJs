@@ -10,6 +10,10 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const productRouter = require("./routes/products");
 const pedidoRouter = require("./routes/pedidos");
+const categoriaRouter = require("./routes/categorias");
+const estadoPedidoRouter = require("./routes/estadopedido");
+const estadoPagoRouter = require("./routes/estadopago");
+const uploadRouter = require("./routes/upload");
 
 
 var app = express();
@@ -28,6 +32,11 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/products", verificarToken, productRouter);
 app.use("/pedidos", verificarToken, pedidoRouter);
+app.use("/categorias", categoriaRouter);
+app.use("/estadopedido", estadoPedidoRouter);
+app.use("/estadopago", estadoPagoRouter);
+app.use("/upload", uploadRouter);
+
 
 
 // catch 404 and forward to error handler

@@ -6,12 +6,10 @@ const verificarAdminRol = require("./verificarAdminRol");
 
 // GET Todos los pedidos
 router.get("/", async (req, res) => {
-   console.log(req.query)
    const userIdFromRequest = req.query.userId;
-   console.log(userIdFromRequest)
    if(userIdFromRequest){
       if(req.userId != userIdFromRequest){
-         res.status(400).send("No puedes acceder a pedidos que no hayas generado tu mismo.");
+         res.send("No puedes acceder a pedidos que no hayas generado tu mismo.");
          return;
        }
        const data = await pedidosRepository.getByUserId(userIdFromRequest);
@@ -31,21 +29,23 @@ router.get("/:id", async (req, res) => {
  // Agregar un pedidoo
 router.post("/", async (req, res) => {
     const pedido = req.body;
+    const fecha = new Date()
+    pedido.createdAt = fecha.toLocaleDateString()
 
     if(req.userId != pedido.idCustomer){
-      res.status(400).send("id customer no valido");
+      res.send("id customer no valido");
       return;
     }
 
     try {
        const result = await pedidosRepository.create(pedido);
        if(result.insertedCount == 1){
-          res.status(201).send("El pedido se agrego a pedidos");
+          res.send("El pedido se agrego a pedidos");
        }else{
-          res.status(500).send("Error al intentar agregar el pedido");
+          res.send("Error al intentar agregar el pedido");
        }
     } catch (error) {
-       res.status(500).send(error);
+       res.send(error);
     }
  });
 
@@ -55,7 +55,7 @@ router.delete("/:id", verificarAdminRol, async (req, res) => {
        const result = await pedidosRepository.removeById(req.params.id);
        res.json({"mensaje": "Se elimino el pedido con ID: " + result});
     } catch (error) {
-        res.status(500).json({error: error.message});
+        res.json({error: error.message});
     }
  });
 

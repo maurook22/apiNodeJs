@@ -3,21 +3,21 @@ const bcrypt = require("bcryptjs");
 const { Connection } = require("../data/mongo-connection");
 
 async function create(user) {
-   if (!user.hasOwnProperty("username") || !user.hasOwnProperty("email") || !user.hasOwnProperty("password"))
+   if (!user.hasOwnProperty("username") || !user.hasOwnProperty("apellido") || !user.hasOwnProperty("email") || !user.hasOwnProperty("telefono") || !user.hasOwnProperty("password"))
       throw "Campos faltantes";
    user.password = await encriptarPassword(user.password);
-   const resultado = await Connection.db.db("ejemplo_tp2").collection("users").insertOne(user);
+   const resultado = await Connection.db.db("ecommerce").collection("users").insertOne(user);
    return resultado;
 }
 
 async function getById(id) {
    id = new ObjectId(id);
-   const resultado = await Connection.db.db("ejemplo_tp2").collection("users").findOne({ _id: id });
+   const resultado = await Connection.db.db("ecommerce").collection("users").findOne({ _id: id });
    return resultado;
 }
 
 async function getByEmail(email) {
-   const resultado = await Connection.db.db("ejemplo_tp2").collection("users").findOne({ email: email });
+   const resultado = await Connection.db.db("ecommerce").collection("users").findOne({ email: email });
    return resultado;
 }
 
@@ -27,7 +27,7 @@ async function encriptarPassword(password) {
 }
 
 async function validarPasswordBcrypt(email, password) {
-   userDB = await getByEmail(email);
+   const userDB = await getByEmail(email);
    return await bcrypt.compare(password, userDB.password);
 }
 
